@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
+import { environment } from '../environments/environment'; // Asegúrate de que esta ruta sea correcta
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoogleService {
 
-  private apiUrl = 'http://localhost:5000/api/google'; // URL de tu backend Flask
+  private apiUrl = `${environment.apiUrl}/google`; // URL de tu backend Flask
 
   constructor(private http: HttpClient) { }
 

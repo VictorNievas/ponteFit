@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment'; // Asegúrate de que esta ruta sea correcta
 
 @Injectable({
   providedIn: 'root'
 })
 export class DietaService {
 
-  private apiUrl = 'http://localhost:5000/api/dieta'; // URL de tu backend Flask
+  private apiUrl = `${environment.apiUrl}/dieta`; // URL de tu backend Flask
 
   constructor(private http: HttpClient) { }
 
