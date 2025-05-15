@@ -1,0 +1,183 @@
+<app-navbar></app-navbar>
+
+<div class="bg-gradient-to-r from-blue-100 to-indigo-100 min-h-screen p-8 mt-16">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-5xl font-bold mb-8 text-center text-indigo-800 tracking-tight">Mis Sesiones</h2>
+    
+    <!-- Lista de sesiones -->
+    <div *ngIf="sesiones.length > 0; else noSesiones" class="grid grid-cols-1 gap-8">
+      <div *ngFor="let sesion of sesionesOrdenadas()" 
+           class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+        
+        <!-- Encabezado de la sesión -->
+        <div class="bg-gradient-to-r from-indigo-600 to-blue-500 p-6 text-white">
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            <h3 class="text-2xl font-bold">Sesión del {{ sesion.fecha | date:'fullDate':'es-ES' }}</h3>
+            <div class="flex items-center space-x-2">
+              <span [ngClass]="{'bg-green-400/90': sesion.publico, 'bg-red-400/90': !sesion.publico}"
+                    class="px-3 py-1 rounded-full text-sm font-medium">
+                {{ sesion.publico ? 'Pública' : 'Privada' }}
+              </span>
+            </div>
+          </div>
+          <h3 class="text-2xl font-bold">
+            {{ sesion.nombreRutina }}
+          </h3>
+          
+          <div class="mt-4 flex items-center">
+            <div class="flex items-center mr-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M6.5 6.5 17.5 17.5"></path>
+                <path d="M5 10h14"></path>
+                <path d="M12 5v14"></path>
+                <path d="M5 5h14v14H5z"></path>
+              </svg>
+              <span>{{ sesion.pesoLevantado }} kg levantados</span>
+            </div>
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+              <span>{{ sesion.ejercicios.length }} ejercicios</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contenido de la sesión -->
+        <div class="p-6">
+          <h4 class="text-xl font-bold text-indigo-800 mb-4 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 text-indigo-600">
+              <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"></path>
+              <path d="M2 20h20"></path>
+              <path d="M14 12v.01"></path>
+            </svg>
+            Ejercicios Realizados
+          </h4>
+          
+          <!-- Lista de ejercicios (cada ejercicio en una fila) -->
+          <div class="space-y-6">
+            <div *ngFor="let ejercicio of sesion.ejercicios; let i = index" 
+                 class="bg-gray-50 rounded-xl p-5 hover:bg-indigo-50 transition-colors duration-200">
+              <!-- Encabezado del ejercicio -->
+              <div class="flex items-center mb-4">
+                <div class="bg-indigo-100 text-indigo-700 w-10 h-10 rounded-full flex items-center justify-center font-bold mr-3">
+                  {{ i + 1 }}
+                </div>
+                
+                <!-- Imagen del ejercicio -->
+                <div class="w-10 h-10 rounded-full overflow-hidden mr-3">
+                  <img [src]="ejercicio.imagen" alt="Imagen del ejercicio" class="w-full h-full object-contain">
+                </div>
+              
+                <h5 class="text-lg font-semibold text-gray-800">
+                  {{ ejercicio.nombre }}
+                </h5>
+              </div>
+              
+              
+              <!-- Series del ejercicio en formato horizontal -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <div *ngFor="let serie of ejercicio.series; let s = index" 
+                     class="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
+                  <div class="flex items-center justify-between mb-2 border-b border-gray-100 pb-1">
+                    <span class="text-sm font-medium text-indigo-600">Serie {{ s + 1 }}</span>
+                  </div>
+                  
+                  <!-- Datos de la serie -->
+                  <div class="space-y-2">
+                    <div *ngIf="serie.repeticiones !== undefined && serie.repeticiones !== null" 
+                         class="flex items-center">
+                      <div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600">
+                          <polyline points="17 1 21 5 17 9"></polyline>
+                          <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                          <polyline points="7 23 3 19 7 15"></polyline>
+                          <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                        </svg>
+                      </div>
+                      <div class="flex-1">
+                        <span class="text-xs text-gray-500">Repeticiones</span>
+                        <p class="font-medium">{{ serie.repeticiones }}</p>
+                      </div>
+                    </div>
+                    
+                    <div *ngIf="serie.peso !== undefined && serie.peso !== null" 
+                         class="flex items-center">
+                      <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
+                          <path d="M6.5 6.5 17.5 17.5"></path>
+                          <path d="M5 10h14"></path>
+                          <path d="M12 5v14"></path>
+                          <path d="M5 5h14v14H5z"></path>
+                        </svg>
+                      </div>
+                      <div class="flex-1">
+                        <span class="text-xs text-gray-500">Peso</span>
+                        <p class="font-medium">{{ serie.peso }} kg</p>
+                      </div>
+                    </div>
+                    
+                    <div *ngIf="serie.distancia !== undefined && serie.distancia !== null" 
+                         class="flex items-center">
+                      <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600">
+                          <path d="M18 6H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h13l4-3.5L18 6Z"></path>
+                          <path d="M12 13v8"></path>
+                          <path d="M12 3v3"></path>
+                        </svg>
+                      </div>
+                      <div class="flex-1">
+                        <span class="text-xs text-gray-500">Distancia</span>
+                        <p class="font-medium">{{ serie.distancia }} km</p>
+                      </div>
+                    </div>
+                    
+                    <div *ngIf="serie.tiempo !== undefined && serie.tiempo !== null" 
+                         class="flex items-center">
+                      <div class="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-600">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                      </div>
+                      <div class="flex-1">
+                        <span class="text-xs text-gray-500">Tiempo</span>
+                        <p class="font-medium">{{ serie.tiempo }} min</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mensaje si no hay sesiones -->
+    <ng-template #noSesiones>
+      <div class="bg-white rounded-2xl shadow-lg p-12 text-center">
+        <div class="flex flex-col items-center justify-center">
+          <div class="bg-indigo-100 p-6 rounded-full text-indigo-600 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-indigo-800 mb-2">No hay sesiones registradas</h3>
+          <p class="text-gray-600 mb-6">Aún no has registrado ninguna sesión de entrenamiento.</p>
+          <button routerLink="/mis_rutinas" class="bg-indigo-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+            <span class="flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Crear Nueva Sesión
+            </span>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

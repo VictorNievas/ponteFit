@@ -1,0 +1,521 @@
+<app-navbar></app-navbar>
+<div class="bg-gradient-to-r from-blue-100 to-indigo-100 min-h-screen p-8 mt-16">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-5xl font-bold mb-8 text-center text-indigo-800 tracking-tight">Mis Rutinas</h2>
+    
+    <!-- Botón para crear rutina -->
+    <div class="flex justify-center mb-10">
+      <button (click)="abrirFormulario()" class="bg-indigo-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+        <span class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Crear Nueva Rutina
+        </span>
+      </button>
+    </div>
+
+    <!-- Modal para crear rutina -->
+    <div *ngIf="mostrarFormulario" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center backdrop-filter backdrop-blur-sm transition-all duration-300">
+      <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full m-4 transform transition-all ease-in-out duration-300" (click)="$event.stopPropagation()">
+        <div class="p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-bold text-indigo-800">Nueva Rutina</h2>
+            <button type="button" class="text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out" (click)="cerrarFormulario()">
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <form (submit)="crearRutina($event)" class="space-y-6">
+            <div>
+              <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+              <input type="text" id="nombre" [(ngModel)]="nombreRutina" name="nombre" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out" required>
+            </div>
+            <div>
+              <label for="descripcion" class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+              <textarea id="descripcion" [(ngModel)]="descripcionRutina" name="descripcion" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out" required></textarea>
+            </div>
+            <div class="flex justify-end space-x-3 pt-4">
+              <button type="button" (click)="cerrarFormulario()" class="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                Cancelar
+              </button>
+              <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                Guardar Rutina
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de rutinas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div *ngFor="let rutina of rutinas" class="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition duration-300 ease-in-out transform hover:-translate-y-1">
+        <div class="p-6">
+          <h3 class="text-2xl font-bold text-indigo-800 mb-2">{{ rutina.nombre }}</h3>
+          <p class="text-gray-600 mb-4">{{ rutina.descripcion }}</p>
+          <div class="mb-4">
+            <h4 class="text-lg font-semibold text-gray-700 mb-2">Ejercicios:</h4>
+            <ul class="space-y-1">
+              <li *ngFor="let ejercicio of rutina.ejercicios" class="flex items-center text-gray-600">
+                <svg class="w-4 h-4 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                {{ejercicio.nombre}} - {{ ejercicio.series }} series
+              </li>
+            </ul>
+          </div>
+          <button (click)="abrirModalRutina(rutina)" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 mb-2">
+            Comenzar Rutina
+          </button>
+          <button (click)="abrirModalEdicion(rutina)" class="w-full bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 mb-2">
+            Editar Rutina
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="mostrarModalEdicion" 
+     class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200"
+     (click)="cerrarModalEdicion()">
+  
+  <!-- Modal card -->
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-md mx-4 animate-in zoom-in-95 duration-150"
+       (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Editar Rutina</h2>
+      <button (click)="cerrarModalEdicion()" 
+              class="h-8 w-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Form -->
+    <div class="space-y-4">
+      <div>
+        <label for="nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre</label>
+        <input type="text" id="nombre" [(ngModel)]="rutinaSeleccionada.nombre" 
+               class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors">
+      </div>
+      
+      <div>
+        <label for="descripcion" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descripción</label>
+        <input type="text" id="descripcion" [(ngModel)]="rutinaSeleccionada.descripcion" 
+               class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors">
+      </div>
+      
+      <!-- Exercises list -->
+      <div>
+        <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">Ejercicios</h3>
+        <ul class="space-y-3 max-h-60 overflow-y-auto pr-1">
+          <li *ngFor="let ejercicio of rutinaSeleccionada.ejercicios; let i = index" 
+              class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg group">
+            <div class="flex items-center flex-1 min-w-0">
+              <span class="font-medium text-gray-800 dark:text-white truncate">{{ ejercicio.nombre }}</span>
+            </div>
+            
+            <div class="flex items-center space-x-3 ml-2">
+              <div class="flex items-center">
+                <label for="series-{{i}}" class="sr-only">Series</label>
+                <input type="number" id="series-{{i}}" [(ngModel)]="ejercicio.series" min="1" 
+                       class="w-16 p-2 border border-gray-300 dark:border-gray-600 rounded text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white">
+              </div>
+              
+              <button (click)="eliminarEjercicio(i)" 
+                      class="p-1.5 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                      aria-label="Eliminar ejercicio">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2">
+                  <path d="M3 6h18"></path>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                  <line x1="10" x2="10" y1="11" y2="17"></line>
+                  <line x1="14" x2="14" y1="11" y2="17"></line>
+                </svg>
+              </button>
+            </div>
+          </li>
+
+          <button (click)="anadirEjercicios()"
+          class="flex justify-end px-5 py-2 bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-500/50 text-white font-medium rounded-lg transition-colors">
+          Añadir Ejercicios
+          </button>
+    
+          <li *ngIf="rutinaSeleccionada.ejercicios.length === 0" 
+              class="p-3 text-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            No hay ejercicios en esta rutina
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="flex justify-end mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <button (click)="cerrarModalEdicion()" 
+              class="px-4 py-2 mr-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+        Cancelar
+      </button>
+      <button (click)="guardarCambios()" 
+              class="px-5 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/50 text-white font-medium rounded-lg transition-colors">
+        Guardar cambios
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para registrar sesión de rutina -->
+<!-- Modal para registrar sesión de rutina -->
+<div *ngIf="mostrarModalRutina" 
+     class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200"
+     (click)="cerrarModalRutina()">
+  
+  <!-- Modal card -->
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-4xl mx-4 animate-in zoom-in-95 duration-150"
+       (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Registrar Sesión: {{ rutinaSeleccionada.nombre }}</h2>
+      <button (click)="cerrarModalRutina()" 
+              class="h-8 w-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Descripción de la rutina -->
+    <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+      <p class="text-gray-700 dark:text-gray-300">{{ rutinaSeleccionada.descripcion }}</p>
+    </div>
+    
+    <!-- Lista de ejercicios -->
+    <div class="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+      <!-- Ejercicios de Fuerza -->
+      <div *ngIf="ejerciciosFuerza.length > 0" class="border-b border-gray-200 dark:border-gray-700 pb-6">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+            <path d="M6 18 6 6"></path>
+            <path d="M18 18 18 6"></path>
+            <path d="M15 12 9 12"></path>
+          </svg>
+          Ejercicios de Fuerza
+        </h3>
+        
+        <div *ngFor="let ejercicio of ejerciciosFuerza; let i = index" class="mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <!-- Imagen circular -->
+            <figure class="w-32 h-32 overflow-hidden flex-shrink-0">
+              <img [src]="ejercicio.imagen" class="w-full h-full object-contain" [alt]="ejercicio.nombre">
+            </figure>
+            <!-- Nombre del ejercicio -->
+            <h4 class="text-lg font-medium text-gray-800 dark:text-white">
+              {{ ejercicio.nombre }}
+            </h4>
+            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ ejercicio.series }} series</span>
+          </div>
+          
+          <!-- Series para ejercicios de fuerza -->
+          <div class="space-y-3">
+            <div *ngFor="let serie of sesion.ejercicios[ejercicio.id_ejercicio].series; let s = index"
+                 class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm">
+                 
+              <!-- Título de la serie -->
+              <h1 class="text-base font-semibold text-gray-800 dark:text-white mb-2">Serie {{ s + 1 }}</h1>
+          
+              <div class="grid grid-cols-2 gap-4">
+                <!-- Campo Peso -->
+                <div>
+                  <label [for]="'peso-' + i + '-' + s" 
+                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Peso (kg)
+                  </label>
+                  <input type="number" [id]="'peso-' + i + '-' + s" [(ngModel)]="serie.peso" 
+                         class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white" 
+                         placeholder="0">
+                </div>
+          
+                <!-- Campo Repeticiones -->
+                <div>
+                  <label [for]="'reps-' + i + '-' + s" 
+                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Repeticiones
+                  </label>
+                  <input type="number" [id]="'reps-' + i + '-' + s" [(ngModel)]="serie.repeticiones" 
+                         class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white" 
+                         placeholder="0">
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      
+      <!-- Ejercicios de Flexibilidad -->
+      <div *ngIf="ejerciciosFlexibilidad.length > 0" class="border-b border-gray-200 dark:border-gray-700 pb-6">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="m16 16-4-4-4 4"></path>
+            <path d="m8 8 4 4 4-4"></path>
+          </svg>
+          Ejercicios de Flexibilidad
+        </h3>
+    
+        <div *ngFor="let ejercicio of ejerciciosFlexibilidad; let i = index" class="mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <!-- Imagen circular -->
+            <figure class="w-32 h-32 flex-shrink-0 flex items-center justify-center bg-white-200 overflow-hidden">
+              <img [src]="ejercicio.imagen" class="w-full h-full object-contain" [alt]="ejercicio.nombre">
+            </figure>
+            <!-- Nombre del ejercicio -->
+            <h4 class="text-lg font-medium text-gray-800 dark:text-white">
+              {{ ejercicio.nombre }}
+            </h4>
+            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ ejercicio.series }} series</span>
+          </div>
+    
+          <!-- Series de Flexibilidad -->
+          <div class="space-y-3">
+            <div *ngFor="let serie of sesion.ejercicios[ejercicio.id_ejercicio].series; let s = index" class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm">
+              <h1 class="text-base font-semibold text-gray-800 dark:text-white mb-2">Serie {{ s + 1 }}</h1>
+    
+              <div>
+                <label [for]="'reps-flex-' + i + '-' + s" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Repeticiones</label>
+                <input type="number" [id]="'reps-flex-' + i + '-' + s" [(ngModel)]="serie.repeticiones"
+                       class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white"
+                       placeholder="0">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Ejercicios de Cardio -->
+      <div *ngIf="ejerciciosCardio.length > 0">
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+          </svg>
+          Ejercicios de Cardio
+        </h3>
+    
+        <div *ngFor="let ejercicio of ejerciciosCardio; let i = index" class="mb-6">
+          <div class="flex items-center gap-3 mb-3">
+            <!-- Imagen circular -->
+            <figure class="w-32 h-32 flex-shrink-0 flex items-center justify-center bg-white-200 overflow-hidden">
+              <img [src]="ejercicio.imagen" class="max-w-full max-h-full object-contain" [alt]="ejercicio.nombre">
+            </figure>
+            <!-- Nombre del ejercicio -->
+            <h4 class="text-lg font-medium text-gray-800 dark:text-white">
+              {{ ejercicio.nombre }}
+            </h4>
+            <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ ejercicio.series }} series</span>
+          </div>
+    
+          <!-- Series de Cardio -->
+          <div class="space-y-3">
+            <div *ngFor="let serie of sesion.ejercicios[ejercicio.id_ejercicio].series; let s = index" class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm">
+              <h1 class="text-base font-semibold text-gray-800 dark:text-white mb-2">Serie {{ s + 1 }}</h1>
+    
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label [for]="'tiempo-' + i + '-' + s" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tiempo (min)</label>
+                  <input type="number" [id]="'tiempo-' + i + '-' + s" [(ngModel)]="serie.tiempo"
+                         class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white"
+                         placeholder="0">
+                </div>
+                <div>
+                  <label [for]="'distancia-' + i + '-' + s" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Distancia (km)</label>
+                  <input type="number" [id]="'distancia-' + i + '-' + s" [(ngModel)]="serie.distancia"
+                         class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:text-white"
+                         placeholder="0" step="0.01">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <label class="relative flex items-center cursor-pointer group">
+        <input type="checkbox" [(ngModel)]="sesion.publico" class="peer sr-only" />
+        <div
+          class="w-8 h-8 rounded-lg bg-white border-2 border-purple-500 transition-all duration-300 ease-in-out peer-checked:bg-gradient-to-br from-purple-500 to-pink-500 peer-checked:border-0 peer-checked:rotate-12 
+                 after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 
+                 after:w-5 after:h-5 after:opacity-0 after:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSIyMCA2IDkgMTcgNCAxMiI+PC9wb2x5bGluZT48L3N2Zz4=')] 
+                 after:bg-contain after:bg-no-repeat peer-checked:after:opacity-100 after:transition-opacity after:duration-300 
+                 hover:shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+        ></div>
+        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">¿Mostar a todo el mundo?</span>
+      </label>
+      
+    
+      
+      <!-- Mensaje si no hay ejercicios -->
+      <div *ngIf="rutinaSeleccionada.ejercicios.length === 0" 
+           class="p-6 text-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-lg">
+        No hay ejercicios en esta rutina
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="flex justify-end mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <button (click)="cerrarModalRutina()" 
+              class="px-4 py-2 mr-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+        Cancelar
+      </button>
+      <button (click)="guardarSesion()" 
+              class="px-5 py-2 bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-500/50 text-white font-medium rounded-lg transition-colors">
+        Guardar Sesión
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para mostrar resultados de la sesión -->
+<div *ngIf="mostrarModalResultados" 
+     class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200"
+     (click)="cerrarModalResultados()">
+  
+  <!-- Modal card -->
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-md mx-4 animate-in zoom-in-95 duration-150"
+       (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-white">✅ Sesión Guardada</h2>
+      <button (click)="cerrarModalResultados()" 
+              class="h-8 w-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Contenido -->
+    <div class="text-center">
+      <p class="text-lg mb-4">Los datos de la sesión han sido guardados correctamente.</p>
+      
+      <h1 class="text-2xl font-bold text-green-600 mb-4">
+        Has levantado un total de {{ sesionGuardada.pesoLevantado }} kg
+      </h1>
+      
+      <!-- Comparación con sesión anterior -->
+      <ng-container *ngIf="sesionGuardada.pesoAnterior !== null">
+        <ng-container *ngIf="sesionGuardada.pesoLevantado > sesionGuardada.pesoAnterior">
+          <p class="text-lg font-bold text-green-600 mb-4">
+            🔥 ¡Has mejorado un {{ ((sesionGuardada.pesoLevantado - sesionGuardada.pesoAnterior) / sesionGuardada.pesoAnterior * 100).toFixed(2) }}% respecto a tu última sesión!
+          </p>
+        </ng-container>
+        
+        <ng-container *ngIf="sesionGuardada.pesoLevantado < sesionGuardada.pesoAnterior">
+          <p class="text-lg font-bold text-red-600 mb-4">
+            💪 Esta vez levantaste un {{ ((sesionGuardada.pesoAnterior - sesionGuardada.pesoLevantado) / sesionGuardada.pesoAnterior * 100).toFixed(2) }}% menos que la última sesión. ¡Sigue esforzándote!
+          </p>
+        </ng-container>
+        
+        <ng-container *ngIf="sesionGuardada.pesoLevantado === sesionGuardada.pesoAnterior">
+          <p class="text-lg font-bold mb-4">
+            🚀 ¡Has igualado tu récord anterior!
+          </p>
+        </ng-container>
+      </ng-container>
+      
+      <!-- Nuevos récords -->
+      <div *ngIf="sesionGuardada.ejercicios.length > 0" class="mt-6">
+        <div *ngFor="let ejercicio of sesionGuardada.ejercicios" class="flex items-center justify-between mb-2 p-3 bg-green-50 rounded-lg">
+          <p class="font-bold text-green-700">
+            ¡Has logrado tu PR en {{ ejercicio.nombre }}: {{ ejercicio.nuevoRecord.toFixed(2) }}kg! 🚀
+          </p>
+          <button 
+            (click)="abrirModalNuevoRecord(ejercicio)"
+            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 hover:scale-105 hover:shadow-md transition-all duration-300 text-sm">
+            Actualizar récord
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="flex justify-center mt-6">
+      <button (click)="cerrarModalResultados()" 
+              class="px-6 py-2 bg-green-600 hover:bg-green-700 hover:scale-105 hover:shadow-md transition-all duration-300 text-white font-medium rounded-lg">
+        ¡Genial!
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para actualizar récord -->
+<div *ngIf="mostrarModalNuevoRecord"
+  class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200"
+  (click)="cerrarModalResultados()">
+<!-- Modal card -->
+<div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-md mx-4 animate-in zoom-in-95 duration-150"
+(click)="$event.stopPropagation()">
+
+<!-- Header -->
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-gray-800 dark:text-white">Establecer nuevo récord</h2>
+<button (click)="cerrarModalNuevoRecord()" 
+       class="h-8 w-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+       aria-label="Cerrar">
+ <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
+   <path d="M18 6 6 18"></path>
+   <path d="m6 6 12 12"></path>
+ </svg>
+</button>
+</div>
+
+<!-- Contenido -->
+<div class="space-y-4">
+<div class="text-center mb-4">
+ <p class="text-lg">
+   Establece tu nuevo objetivo para <span class="font-bold">{{ejercicioRecordSeleccionado.nombre}}</span>
+ </p>
+</div>
+
+<div class="space-y-2">
+ <label for="nuevoRecord" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+   Nuevo objetivo (kg)
+ </label>
+ <input 
+   type="number" 
+   id="nuevoRecord" 
+   [(ngModel)]= "nuevoRecord"
+   class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+   min="0"
+   step="0.5"
+ >
+</div>
+</div>
+
+<!-- Footer -->
+<div class="flex justify-end mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+<button (click)="cerrarModalNuevoRecord()" 
+       class="px-4 py-2 mr-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+ Cancelar
+</button>
+<button (click)="actualizarRecord(userId,ejercicioRecordSeleccionado.id,nuevoRecord)" 
+       class="px-5 py-2 bg-blue-600 hover:bg-blue-700 hover:scale-105 hover:shadow-md transition-all duration-300 text-white font-medium rounded-lg">
+ Guardar objetivo
+</button>
+</div>
+</div>
+</div>
+
+
+
+

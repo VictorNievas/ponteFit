@@ -1,0 +1,98 @@
+<div class="relative min-h-screen overflow-hidden">
+  <!-- Video de fondo local -->
+  <video autoplay muted loop class="absolute inset-0 w-full h-full object-cover z-0">
+    <source src="assets/videos/244839_medium.mp4" type="video/mp4">
+    Tu navegador no soporta videos HTML5.
+  </video>
+
+  <!-- Contenedor del formulario con overlay semi-transparente -->
+  <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-4xl bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-105">
+      <div class="p-8 sm:p-12">
+        <div class="flex flex-col justify-center items-center gap-3 pb-6">
+          <h1 class="text-4xl font-bold text-indigo-800">PonteFit</h1>
+          <p class="text-sm font-medium text-gray-600 text-center">Regístrate en PonteFit y comienza tu viaje hacia una vida más saludable</p>
+        </div>
+        
+        <form [formGroup]="registroForm" (ngSubmit)="registrarUsuario()" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Columna 1 -->
+            <div class="space-y-6">
+              <div>
+                <label for="nombre" class="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
+                <input type="text" id="nombre" formControlName="nombre" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out" placeholder="Tu nombre" required>
+              </div>
+
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input type="email" id="email" formControlName="email" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out" placeholder="tucorreo@email.com" required>
+              </div>
+
+              <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
+                <input type="password" id="password" formControlName="password" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out" placeholder="••••••••••" required>
+              </div>
+
+              <div>
+                <label for="edad" class="block text-sm font-medium text-gray-700 mb-2">Edad</label>
+                <input type="number" id="edad" formControlName="edad" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out" placeholder="Tu edad" required>
+              </div>
+            </div>
+
+            <!-- Columna 2 -->
+            <div class="space-y-6">
+              <div>
+                <label for="peso_inicial" class="block text-sm font-medium text-gray-700 mb-2">Peso Inicial (kg)</label>
+                <input type="number" id="peso_inicial" formControlName="peso_inicial" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out" placeholder="Tu peso" required>
+              </div>
+
+              <div>
+                <label for="altura" class="block text-sm font-medium text-gray-700 mb-2">Altura (cm)</label>
+                <input type="number" id="altura" formControlName="altura" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out" placeholder="Tu altura" required>
+              </div>
+
+              <div>
+                <label for="sexo" class="block text-sm font-medium text-gray-700 mb-2">Sexo</label>
+                <select id="sexo" formControlName="sexo" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out">
+                  <option value="hombre">Hombre</option>
+                  <option value="mujer">Mujer</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="objetivo" class="block text-sm font-medium text-gray-700 mb-2">Objetivo</label>
+                <select id="objetivo" formControlName="objetivo" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out">
+                  <option value="Mantener">Mantener</option>
+                  <option value="Ganar Masa Muscular">Ganar Masa Muscular</option>
+                  <option value="Perder Grasa">Perder Grasa</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="nivel_actividad" class="block text-sm font-medium text-gray-700 mb-2">Nivel de Actividad</label>
+                <select id="nivel_actividad" formControlName="nivel_actividad" class="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 ease-in-out">
+                  <option value="sedentario">Sedentario (0-2 entrenos semanales)</option>
+                  <option value="activo">Activo (3-5 entrenos semanales)</option>
+                  <option value="muy_activo">Muy Activo (6-7 entrenos semanales)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 ease-in-out transform hover:scale-105" [disabled]="registroForm.invalid">
+              Registrarse
+            </button>
+          </div>
+        </form>
+
+        <div class="mt-6 text-center">
+          <p class="text-sm text-gray-600">
+            ¿Ya tienes cuenta? 
+            <a href="/login" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors duration-300 ease-in-out">Inicia sesión</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

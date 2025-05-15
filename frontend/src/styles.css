@@ -1,0 +1,80 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.background-image {
+    background-image: url('assets/images/pngtree-fitness-room-ambiance-wooden-parquet-floor-with-training-equipment-and-black-picture-image_9948972.jpg');
+    background-size: cover; /* Asegura que la imagen cubra todo el contenedor */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    height: 100vh; /* Ajusta el alto para ocupar toda la pantalla */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Secciones */
+  .home-section {
+    padding: 80px 0;
+    transition: background-color 0.3s ease;
+  }
+  
+  .home-section img {
+    border-radius: 12px;
+  }
+  
+  .home-section h2 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.5rem;
+    color: #333;
+    font-weight: 700;
+  }
+  
+  .home-section p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-top: 20px;
+  }
+  
+  .home-section a {
+    margin-top: 20px;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  
+
+  
+  .home-section.bg-light {
+    background-color: #f7f7f7;
+  }
+  
+  /* Imágenes */
+  .img-fluid {
+    max-height: 400px;
+    object-fit: cover;
+  }
+  
+  /* Personalización del Scroll */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f4f4f4;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+  }
+  
