@@ -13,3 +13,4 @@ __pycache__/
 venv/
 env/
 frontend/node_modules/
+node_modules/
