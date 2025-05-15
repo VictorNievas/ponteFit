@@ -25,6 +25,7 @@ export class MisEjerciciosComponent implements OnInit {
   categorias = ['Pectoral', 'Espalda', 'Brazo', 'Pierna', 'Abdomen'];
   isDropdownOpenCategoria = false;
   isDropdownOpenTipo = false;
+  modalAbierto = false;
 
   constructor(private apiService: ApiService, private modalService: NgbModal) {}
 
@@ -75,12 +76,12 @@ export class MisEjerciciosComponent implements OnInit {
     this.isDropdownOpenTipo = false;
   }
 
-  abrirModal(item: any, modal: any): void {
+  abrirModal(item: any): void {
     this.elementoSeleccionado = item;
     this.rutinaSeleccionada = null;
     this.series = 1;
     this.objetivo = 1;
-    this.modalService.open(modal);
+    this.modalAbierto = true;
   }
 
   async obtenerRutinas() {
@@ -110,8 +111,11 @@ export class MisEjerciciosComponent implements OnInit {
       return 'Desconocido';
     }
   }
+  cerrarModal(): void {
+    this.modalAbierto = false;
+  }
 
-  confirmarAnadir(modal: any): void {
+  confirmarAnadir(): void {
     if (this.rutinaSeleccionada && this.series > 0 && this.objetivo > 0) {
       console.log(`Añadiendo ${this.elementoSeleccionado.nombre} a la rutina ${this.rutinaSeleccionada} con ${this.series} series.`);
       this.apiService.anadirEjercicioRutina(this.elementoSeleccionado.id, this.rutinaSeleccionada, this.series).subscribe(
@@ -134,7 +138,7 @@ export class MisEjerciciosComponent implements OnInit {
           (response) => {},
           (error) => {});
       }
-      modal.dismiss();
+      this.cerrarModal();
     } else {
       alert('Por favor, selecciona una rutina y un número válido de series.');
     }

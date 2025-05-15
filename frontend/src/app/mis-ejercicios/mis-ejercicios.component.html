@@ -72,7 +72,7 @@
           <h3 class="text-2xl font-bold text-indigo-800 mb-3">{{ item.nombre }}</h3>
           <p class="text-gray-600 mb-2"><span class="font-semibold">Categoría:</span> {{ item.categoria }}</p>
           <p class="text-gray-600 mb-4"><span class="font-semibold">Tipo:</span> {{ item.tipo }}</p>
-          <button (click)="abrirModal(item, modalRutina)" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+          <button (click)="abrirModal(item)" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
             Añadir a una rutina
           </button>
         </div>
@@ -82,53 +82,50 @@
 </div>
 
 <!-- Modal para seleccionar rutina y series -->
-<ng-template #modalRutina let-modal>
-  <div class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center backdrop-filter backdrop-blur-sm transition-all duration-300" (click)="modal.dismiss()">
-    <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full m-4 transform transition-all ease-in-out duration-300" (click)="$event.stopPropagation()">
-      <div class="p-8">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-indigo-800">Añadir {{ elementoSeleccionado?.nombre }} a una rutina</h2>
-          <button type="button" class="text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out" (click)="modal.dismiss()">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-        
-        <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona una rutina:</label>
-          <select [(ngModel)]="rutinaSeleccionada" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
-            <option *ngFor="let rutina of rutinas" [value]="rutina.id">{{ rutina.nombre }}</option>
-          </select>
-        </div>
-        
-        <div class="mb-8">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Número de series:</label>
-          <input type="number" [(ngModel)]="series" min="1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out" />
-        </div>
-        
-        <div *ngIf="elementoSeleccionado.tipo === 'Fuerza'" class="mb-8">
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            Objetivo a una repetición:
-          </label>
-          <input 
-            type="number" 
-            [(ngModel)]="objetivo" 
-            min="1" 
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out" 
-          />
-        </div>
-        
+<div *ngIf="modalAbierto" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center backdrop-filter backdrop-blur-sm transition-all duration-300">
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-md w-full m-4 transform transition-all ease-in-out duration-300" (click)="$event.stopPropagation()">
+    <div class="p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-indigo-800">Añadir {{ elementoSeleccionado?.nombre }} a una rutina</h2>
+        <button type="button" class="text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out" (click)="cerrarModal()">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
 
-        <div class="flex justify-end space-x-3">
-          <button (click)="modal.dismiss()" class="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
-            Cancelar
-          </button>
-          <button (click)="confirmarAnadir(modal)" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
-            Añadir
-          </button>
-        </div>
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Selecciona una rutina:</label>
+        <select [(ngModel)]="rutinaSeleccionada" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+          <option *ngFor="let rutina of rutinas" [value]="rutina.id">{{ rutina.nombre }}</option>
+        </select>
+      </div>
+
+      <div class="mb-8">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Número de series:</label>
+        <input type="number" [(ngModel)]="series" min="1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out" />
+      </div>
+
+      <div *ngIf="elementoSeleccionado.tipo === 'Fuerza'" class="mb-8">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Objetivo a una repetición:
+        </label>
+        <input 
+          type="number" 
+          [(ngModel)]="objetivo" 
+          min="1" 
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out" 
+        />
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <button (click)="cerrarModal()" class="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+          Cancelar
+        </button>
+        <button (click)="confirmarAnadir()" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+          Añadir
+        </button>
       </div>
     </div>
   </div>
-</ng-template>
+</div>
