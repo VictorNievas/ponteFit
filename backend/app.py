@@ -48,14 +48,5 @@ app.register_blueprint(ejercicios, url_prefix='/api/ejercicios')
 app.register_blueprint(dieta, url_prefix='/api/dieta')
 app.register_blueprint(google, url_prefix='/api/google')
 
-# Función para probar conexión a MongoDB antes de arrancar la app
-@app.before_first_request
-def test_connection():
-    try:
-        mongo.cx.admin.command('ping')  # mongo.cx es MongoClient interno de flask_pymongo
-        print("Ping exitoso a MongoDB Atlas")
-    except PyMongoError as e:
-        print("Error conectando a MongoDB Atlas:", e)
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
