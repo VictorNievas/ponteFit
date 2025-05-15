@@ -1,0 +1,15 @@
+# Archivos sensibles y datos
+.env
+data/
+backend/routes/client_secret_*.json
+backend/flask_session/
+
+# Archivos temporales y configuración local
+*.log
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+venv/
+env/
+frontend/node_modules/
