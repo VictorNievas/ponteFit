@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
-import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -13,7 +12,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { RegistroComponent } from './registro/registro.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MisEjerciciosComponent } from './mis-ejercicios/mis-ejercicios.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MiDietaComponent } from './mi-dieta/mi-dieta.component';
@@ -21,6 +20,8 @@ import { RutinasComponent } from './rutinas/rutinas.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { MisSesionesComponent } from './mis-sesiones/mis-sesiones.component';
 import { DescubrirComponent } from './descubrir/descubrir.component';
+import { RouterModule } from '@angular/router';                      // ← router-outlet
+import { CommonModule } from '@angular/common';                      // ← pipes como date
 
 @NgModule({
   declarations: [
