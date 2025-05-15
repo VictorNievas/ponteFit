@@ -11,23 +11,33 @@ import os
 import certifi
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True) 
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
-# Configuración de la conexión a MongoDB
-app.config["MONGO_URI"] = "mongodb://root:example@localhost:27017/tfg?authSource=admin"
-app.config['JWT_SECRET_KEY'] = 'clave_secreta'
-app.config['SECRET_KEY'] = 'clave_secreta'
+# Configuración dinámica de la base de datos
+MONGO_URI_LOCAL = "mongodb://root:example@localhost:27017/tfg?authSource=admin"
+MONGO_URI_ATLAS = "mongodb+srv://victorquentar:vnh2002q@tfg.gi3cqgd.mongodb.net/tfg?retryWrites=true&w=majority&appName=tfg"
 
+# Puedes usar una variable de entorno para elegir
+use_atlas = os.environ.get('USE_ATLAS', 'true').lower() == 'true'
+app.config["MONGO_URI"] = MONGO_URI_ATLAS if use_atlas else MONGO_URI_LOCAL
+
+# Claves y configuraciones de seguridad
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'clave_secreta')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'clave_secreta')
+
+# Configuración de sesiones
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = os.path.abspath('./flask_session')  # ruta válida
+os.makedirs(app.config['SESSION_FILE_DIR'], exist_ok=True)
+
+# Inicialización de extensiones
 jwt = JWTManager(app)
 mongo.init_app(app)
-
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
-app.config['SECRET_KEY'] = 'tu_clave_secreta'  # Cambia esto por una clave secreta segura
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_FILE_DIR'] = '/path/to/sessions'
 Session(app)
 
+# Corrección para certificados SSL de MongoDB Atlas
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
 
 # Registrar Blueprints
 app.register_blueprint(usuarios, url_prefix='/api/usuarios')
