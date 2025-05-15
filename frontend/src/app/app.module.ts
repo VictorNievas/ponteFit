@@ -1,27 +1,22 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
-import { LoginComponent } from './login/login.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HomeComponent } from './home/home.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import { RegistroComponent } from './registro/registro.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MisEjerciciosComponent } from './mis-ejercicios/mis-ejercicios.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MiDietaComponent } from './mi-dieta/mi-dieta.component';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
+import { AppComponent } from './app.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { LoginComponent } from './login/login.component';
+import { RegistroComponent } from './registro/registro.component';
 import { RutinasComponent } from './rutinas/rutinas.component';
-import { PerfilComponent } from './perfil/perfil.component';
+import { MiDietaComponent } from './mi-dieta/mi-dieta.component';
 import { MisSesionesComponent } from './mis-sesiones/mis-sesiones.component';
+import { MisEjerciciosComponent } from './mis-ejercicios/mis-ejercicios.component';
 import { DescubrirComponent } from './descubrir/descubrir.component';
-import { RouterModule } from '@angular/router';                      // ← router-outlet
-import { CommonModule } from '@angular/common';                      // ← pipes como date
+import { PerfilComponent } from './perfil/perfil.component';
+import { HomeComponent } from './home/home.component';                     // ← pipes como date
+import { AppRoutingModule } from './app-routing.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -42,11 +37,8 @@ import { CommonModule } from '@angular/common';                      // ← pipe
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    NgbModule,
-    MatButtonModule,
-    MatIconModule,
-    MatToolbarModule,
     ReactiveFormsModule,
+    CommonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
