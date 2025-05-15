@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { lastValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -27,7 +26,7 @@ export class MisEjerciciosComponent implements OnInit {
   isDropdownOpenTipo = false;
   modalAbierto = false;
 
-  constructor(private apiService: ApiService, private modalService: NgbModal) {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
     this.apiService.getEjericios().subscribe((response: any[]) => {
