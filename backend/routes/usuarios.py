@@ -20,6 +20,8 @@ def register():
     objetivo = data.get('objetivo')
     sexo = data.get('sexo')
 
+    if mongo.db.usuarios.find_one({'nombre': username}):
+        return jsonify({'msg': 'El nombre de usuario ya existe'}), 409  # 409 Conflict
 
     if not username or not password:
         return jsonify({"error": "Faltan datos"}), 400
