@@ -27,15 +27,6 @@ app.config["MONGO_URI"] = MONGO_URI_ATLAS if use_atlas else MONGO_URI_LOCAL
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'clave_secreta')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'clave_secreta')
 
-client = MongoClient(app.config["MONGO_URI"], server_api=ServerApi('1'))
-try:
-    # Verificar la conexión a la base de datos
-    client.admin.command('ping')
-    print("Conexión a MongoDB exitosa")
-except PyMongoError as e:
-    print(f"Error de conexión a MongoDB: {e}")
-    raise
-
 @app.route('/')
 def index():
     return "API de TFG en funcionamiento"
