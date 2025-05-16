@@ -45,7 +45,7 @@ export class RegistroComponent {
             })
           },
           (error) => {
-            alert('Hubo un error al registrar el usuario');
+            alert('El nombre de usuario ya existe o el email es inválido');
             console.error(error);
           }
         );
