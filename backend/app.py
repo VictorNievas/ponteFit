@@ -9,8 +9,6 @@ from routes.dieta import dieta
 from routes.google import google
 import os
 import certifi
-from pymongo.server_api import ServerApi
-from pymongo import MongoClient
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
@@ -27,9 +25,6 @@ app.config["MONGO_URI"] = MONGO_URI_ATLAS if use_atlas else MONGO_URI_LOCAL
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'clave_secreta')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'clave_secreta')
 
-@app.route('/')
-def index():
-    return "API de TFG en funcionamiento"
 
 # Configuración de sesiones
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -50,6 +45,7 @@ app.register_blueprint(usuarios, url_prefix='/api/usuarios')
 app.register_blueprint(ejercicios, url_prefix='/api/ejercicios')
 app.register_blueprint(dieta, url_prefix='/api/dieta')
 app.register_blueprint(google, url_prefix='/api/google')
+    
 
 from pymongo.errors import PyMongoError
 
