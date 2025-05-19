@@ -31,8 +31,15 @@ def crear_rutina():
     user_id = int(data.get('id'))
     nombre = str(data.get('nombre'))
     descripcion = str(data.get('descripcion'))
-    ejercicios = []
-    ejercicios.append(data.get('ejercicios'))
+    ejercicios_raw = data.get('ejercicios')
+
+    # Normalizamos a una lista de ejercicios válida
+    if isinstance(ejercicios_raw, list):
+        ejercicios = ejercicios_raw
+    elif isinstance(ejercicios_raw, dict):
+        ejercicios = [ejercicios_raw]
+    else:
+        ejercicios = []
 
     ultima_rutina = mongo.db.rutinas.find_one(sort=[("_id", -1)])
     mongo.db.rutinas.insert_one({
@@ -109,7 +116,8 @@ def guardar_sesion():
         "fecha": fecha,
         "ejercicios": ejercicios,
         "publico": publico,
-        "pesoLevantado": pesoLevantado
+        "pesoLevantado": pesoLevantado,
+        "comentarios": []
     })
 
     return jsonify({"message": "Sesion guardada correctamente"}), 201
@@ -126,12 +134,18 @@ def get_ultima_sesion():
 
 # A partir de aqui no estan anadidas al frontend
 @ejercicios.route('get_mis_sesiones', methods=['GET'])
-def get_sesiones():
+def get_mis_sesiones():
     user_id = int(request.args.get('id'))
 
     sesiones = list(mongo.db.sesiones.find({'id_usuario' : user_id}))
     datos = [serialize_document(doc) for doc in sesiones]
 
+    return jsonify(datos)
+
+@ejercicios.route('get_sesiones', methods=['GET'])
+def get_sesiones():
+    sesiones = list(mongo.db.sesiones.find({}))
+    datos = [serialize_document(doc) for doc in sesiones]
     return jsonify(datos)
 
 @ejercicios.route('get_sesiones_publicas', methods=['GET'])

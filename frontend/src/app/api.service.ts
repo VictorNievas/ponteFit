@@ -53,6 +53,10 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/get_mis_sesiones?id=${id}`);
   }
 
+  getSesiones(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/get_sesiones`);
+  }
+
   getSesionesPublicas(): Observable<any> {
     return this.http.get(`${this.apiUrl}/get_sesiones_publicas`);
   }

@@ -185,13 +185,21 @@ export class RutinasComponent implements OnInit {
     console.log("Rutina seleccionada:", this.rutinaSeleccionada)
 
     // Initialize session data
+    const now = new Date();
+    const fechaLocal = now.getFullYear() + "-" +
+                      String(now.getMonth() + 1).padStart(2, '0') + "-" +
+                      String(now.getDate()).padStart(2, '0') + " " +
+                      String(now.getHours()).padStart(2, '0') + ":" +
+                      String(now.getMinutes()).padStart(2, '0') + ":" +
+                      String(now.getSeconds()).padStart(2, '0');
+
     this.sesion = {
       id_usuario: Number(localStorage.getItem("usuario")),
       id_rutina: rutina.id,
-      fecha: new Date().toISOString().split("T")[0], // Format: YYYY-MM-DD
+      fecha: fechaLocal, // → "2025-05-19 19:10:55"
       ejercicios: {},
-      publico: false, // Inicializamos la propiedad publico
-    }
+      publico: false
+    };
 
     // Sort exercises by type and initialize session data
     for (const ejercicio of this.rutinaSeleccionada.ejercicios) {

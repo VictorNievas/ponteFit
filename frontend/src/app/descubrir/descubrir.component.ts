@@ -18,6 +18,7 @@ export class DescubrirComponent {
   nuevaDescripcionRutina: string = '';
   modalCopiarRutina: boolean = false;
   sesion_actual: number = 0;
+  sesiones_todas: any[] = [];
 
   ngOnInit(): void {
     this.getSesionesPublicas();
@@ -27,6 +28,9 @@ export class DescubrirComponent {
     try {
       const response = await this.apiService.getSesionesPublicas().toPromise();
       this.sesiones = response;
+      const response2 = await this.apiService.getSesiones().toPromise();
+      this.sesiones_todas = response2;
+      console.log('Sesiones obtenidas todas: ', this.sesiones_todas);
       for (const sesion of this.sesiones) {
         const rutinaResponse = await this.apiService.getRutina(sesion.id_rutina).toPromise();
         sesion.nombreRutina = rutinaResponse.nombre;
@@ -90,6 +94,8 @@ export class DescubrirComponent {
 
   abrirModal(id_sesion: number): void {
     this.sesion_actual = id_sesion;
+    console.log('Sesion actual:', this.sesion_actual);
+    console.log('Sesion actual:', this.sesiones[this.sesion_actual -1]);
     this.modalCopiarRutina = true;
   }
 
@@ -102,8 +108,9 @@ export class DescubrirComponent {
     const usuarioId = Number(localStorage.getItem('usuario'));
     const nombre = this.nuevoNombreRutina.trim();
     const descripcion = this.nuevaDescripcionRutina.trim();
-    const rutina = await this.apiService.getRutina(this.sesiones[this.sesion_actual].id_rutina).toPromise();
-    await this.apiService.crearRutina(nombre, descripcion, usuarioId, rutina.ejercicios[0]).toPromise();
+    console.log('Sesion actual:', this.sesiones_todas[this.sesion_actual]);
+    const rutina = await this.apiService.getRutina(this.sesiones_todas[this.sesion_actual-1].id_rutina).toPromise();
+    await this.apiService.crearRutina(nombre, descripcion, usuarioId, rutina.ejercicios).toPromise();
     Swal.fire({
       icon: 'success',
       title: 'Rutina Copiada',
