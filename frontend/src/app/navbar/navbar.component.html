@@ -46,7 +46,6 @@
           <a href="/mis_ejercicios" class="text-white hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Mis Ejercicios</a>
           <a href="/mi_dieta" class="text-white hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Mi Dieta</a>
           <a href="/mis_rutinas" class="text-white hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Mis Rutinas</a>
-          <a href="/about" class="text-white hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-300 ease-in-out">Acerca de</a>
         </div>
       </div>
       <div class="flex items-center">
@@ -77,50 +76,65 @@
   </div>
 
   <!-- Mobile menu, show/hide based on menu state. -->
-  <div class="sm:hidden" id="mobile-menu" [ngClass]="{'hidden': !mobileMenuOpen}">
-    <div class="px-2 pt-2 pb-3 space-y-1">
-      <!-- Dropdown para móvil -->
-      <div class="relative">
-        <button (click)="toggleMobileSesionesMenu()" class="w-full text-left text-white hover:bg-blue-500 px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out flex items-center justify-between">
-          <div class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-              <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"></path>
-              <path d="M2 20h20"></path>
-              <path d="M14 12v.01"></path>
-            </svg>
-            Sesiones
-          </div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" [ngClass]="{'transform rotate-180': mobileSesionesOpen}">
-            <path d="m6 9 6 6 6-6"/>
+  <!-- Mobile menu -->
+<div class="sm:hidden backdrop-blur-md bg-blue-900/80 shadow-lg rounded-xl m-2 p-3 transition-all duration-300 ease-in-out" id="mobile-menu" [ngClass]="{'hidden': !mobileMenuOpen}">
+  <div class="space-y-2">
+
+    <!-- Dropdown Sesiones -->
+    <div class="relative">
+      <button (click)="toggleMobileSesionesMenu()"
+        class="w-full text-left text-white hover:bg-blue-700 px-4 py-3 rounded-lg text-base font-semibold flex items-center justify-between transition-all duration-200">
+        <span class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"></path>
+            <path d="M2 20h20"></path>
+            <path d="M14 12v.01"></path>
           </svg>
-        </button>
-        <div class="pl-4 mt-1 space-y-1" [ngClass]="{'hidden': !mobileSesionesOpen}">
-          <a href="/descubrir" class="text-white hover:bg-blue-600 px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="mr-2">
-              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0-18 0m.6-3h16.8M3.6 15h16.8"/>
-                <path d="M11.5 3a17 17 0 0 0 0 18m1-18a17 17 0 0 1 0 18"/>
-              </g>
-            </svg>
-            Descubrir
-          </a>
-          <a href="/mis_sesiones" class="text-white hover:bg-blue-600 px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="16" y1="2" x2="16" y2="6"></line>
-              <line x1="8" y1="2" x2="8" y2="6"></line>
-              <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            Mis Sesiones
-          </a>
-        </div>
+          Sesiones
+        </span>
+        <svg class="w-4 h-4 transform transition-transform duration-300"
+          [ngClass]="{'rotate-180': mobileSesionesOpen}" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m6 9 6 6 6-6"/>
+        </svg>
+      </button>
+
+      <!-- Submenú -->
+      <div class="pl-4 mt-2 border-l border-blue-700 space-y-2 transition-all duration-300" [ngClass]="{'hidden': !mobileSesionesOpen}">
+        <a href="/descubrir"
+          class="flex items-center gap-2 text-white hover:bg-blue-600 px-4 py-2 rounded-lg text-sm font-medium transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0-18 0m.6-3h16.8M3.6 15h16.8"/>
+            <path d="M11.5 3a17 17 0 0 0 0 18m1-18a17 17 0 0 1 0 18"/>
+          </svg>
+          Descubrir
+        </a>
+        <a href="/mis_sesiones"
+          class="flex items-center gap-2 text-white hover:bg-blue-600 px-4 py-2 rounded-lg text-sm font-medium transition">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          Mis Sesiones
+        </a>
       </div>
-      
-      <a href="/mis_ejercicios" class="text-white hover:bg-blue-500 px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Mis Ejercicios</a>
-      <a href="/mi_dieta" class="text-white hover:bg-blue-500 px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Mi Dieta</a>
-      <a href="/mis_rutinas" class="text-white hover:bg-blue-500 px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Mis Rutinas</a>
-      <a href="/about" class="text-white hover:bg-blue-500 px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Acerca de</a>
-      <a href="/login" class="text-white hover:bg-blue-500 px-3 py-2 rounded-md text-base font-medium transition duration-300 ease-in-out">Cerrar Sesión</a>
     </div>
+
+    <!-- Otros enlaces -->
+    <a href="/mis_ejercicios"
+      class="block text-white hover:bg-blue-600 px-4 py-3 rounded-lg text-base font-medium transition">Mis Ejercicios</a>
+    <a href="/mi_dieta"
+      class="block text-white hover:bg-blue-600 px-4 py-3 rounded-lg text-base font-medium transition">Mi Dieta</a>
+    <a href="/mis_rutinas"
+      class="block text-white hover:bg-blue-600 px-4 py-3 rounded-lg text-base font-medium transition">Mis Rutinas</a>
+    <a href="/login"
+      class="block text-white hover:bg-red-600 hover:text-white px-4 py-3 rounded-lg text-base font-medium transition">Cerrar Sesión</a>
   </div>
+</div>
+
 </nav>
