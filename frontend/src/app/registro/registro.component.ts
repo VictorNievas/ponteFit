@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class RegistroComponent {
   registroForm: FormGroup;
+  loading = false;
 
   constructor(private fb: FormBuilder, private usuarioService: AuthService) {
     this.registroForm = this.fb.group({
@@ -27,6 +28,7 @@ export class RegistroComponent {
   }
 
   registrarUsuario() {
+    this.loading = true;
     if (this.registroForm.valid) {
       console.log(this.registroForm.value)
       this.usuarioService
@@ -41,12 +43,14 @@ export class RegistroComponent {
             }).then((result) => {
               if(result.isConfirmed){
                 this.registroForm.reset()
+                this.loading = false;
               }
             })
           },
           (error) => {
             alert('El nombre de usuario ya existe o el email es inválido');
             console.error(error);
+            this.loading = false;
           }
         );
     }
