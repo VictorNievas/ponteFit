@@ -17,6 +17,7 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { HomeComponent } from './home/home.component';                     // ← pipes como date
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { LandingpageComponent } from './landingpage/landingpage.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { HttpClientModule } from '@angular/common/http';
     RutinasComponent,
     PerfilComponent,
     MisSesionesComponent,
-    DescubrirComponent
+    DescubrirComponent,
+    LandingpageComponent
   ],
   imports: [
     BrowserModule,

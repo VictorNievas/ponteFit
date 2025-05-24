@@ -1,0 +1,72 @@
+/* Estilos adicionales para animaciones y efectos */
+.bg-image {
+  background-attachment: fixed;
+}
+
+@media (max-width: 768px) {
+  .bg-image {
+    background-attachment: scroll;
+  }
+}
+
+/* Animación suave para el scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Efectos hover personalizados */
+.hover-scale:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Gradientes personalizados */
+.gradient-indigo {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Sombras personalizadas */
+.shadow-indigo {
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+/* Animaciones de entrada */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .text-4xl {
+    font-size: 2.5rem;
+  }
+
+  .text-5xl {
+    font-size: 3rem;
+  }
+
+  .text-6xl {
+    font-size: 3.5rem;
+  }
+}
+
+/* Transiciones suaves */
+button {
+  transition: all 0.3s ease;
+}
+
+/* Hover effects */
+button:hover {
+  transform: translateY(-1px);
+}

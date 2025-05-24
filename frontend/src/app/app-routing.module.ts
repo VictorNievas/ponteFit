@@ -9,9 +9,10 @@ import { RutinasComponent } from './rutinas/rutinas.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { MisSesionesComponent } from './mis-sesiones/mis-sesiones.component';
 import {DescubrirComponent} from './descubrir/descubrir.component';
+import { LandingpageComponent } from './landingpage/landingpage.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, // Ruta por defecto
+  { path: '', redirectTo: '/landingpage', pathMatch: 'full' }, // Ruta por defecto
   { path : 'home', component: HomeComponent },
   { path : 'login', component: LoginComponent },
   { path : 'registro', component: RegistroComponent},
@@ -20,7 +21,9 @@ const routes: Routes = [
   { path : 'mis_rutinas', component: RutinasComponent},
   { path : 'mi_perfil', component: PerfilComponent},
   { path : 'mis_sesiones', component: MisSesionesComponent},
-  { path : 'descubrir', component: DescubrirComponent}
+  { path : 'descubrir', component: DescubrirComponent},
+  { path : 'landingpage', component: LandingpageComponent },
+
 ];
 
 @NgModule({
