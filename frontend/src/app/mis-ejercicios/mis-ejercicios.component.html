@@ -3,6 +3,18 @@
   <div class="max-w-7xl mx-auto">
     <h2 class="text-4xl font-bold mb-8 text-center text-indigo-800 tracking-tight">Ejercicios</h2>
 
+      <!-- Barra de búsqueda por nombre -->
+  <div class="flex justify-center mb-6">
+    <input 
+      type="text" 
+      placeholder="Buscar ejercicio por nombre..."
+      [(ngModel)]="filtroBusqueda"
+      (input)="filtrarEjercicios()"
+      class="w-96 p-3 rounded-full border  border-indigo-300 shadow-md text-indigo-800 placeholder-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200"
+    />
+  </div>
+
+
     <!-- Filtros -->
     <div class="flex flex-wrap justify-center gap-4 mb-8">
       <!-- Dropdown Categoría -->
@@ -75,6 +87,11 @@
           <button (click)="abrirModal(item)" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
             Añadir a una rutina
           </button>
+          <div *ngIf="item.tipo == 'Fuerza'" class= "mt-4">
+            <button (click)="openModalGrafica(item)" class="w-full bg-yellow-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-opacity-50">
+            Ver evolución
+          </button>
+          </div>
         </div>
       </div>
     </div>
@@ -125,6 +142,25 @@
         <button (click)="confirmarAnadir()" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
           Añadir
         </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div *ngIf="modalVisibleGrafica" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center backdrop-filter backdrop-blur-sm transition-all duration-300">
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-3xl w-full m-4 transform transition-all ease-in-out duration-300" (click)="$event.stopPropagation()">
+    <div class="p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-indigo-800">Evolución del ejercicio</h2>
+        <button type="button" (click)="closeModalGrafica()" class="text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="w-full h-64">
+        <canvas #chartCanvas></canvas>
       </div>
     </div>
   </div>

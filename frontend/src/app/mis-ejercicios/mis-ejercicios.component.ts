@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../api.service';
 import { lastValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
-
+import {Chart} from 'chart.js';
 @Component({
     selector: 'app-mis-ejercicios',
     templateUrl: './mis-ejercicios.component.html',
@@ -25,8 +25,15 @@ export class MisEjerciciosComponent implements OnInit {
   isDropdownOpenCategoria = false;
   isDropdownOpenTipo = false;
   modalAbierto = false;
+  filtroBusqueda: string = '';
+  modalVisibleGrafica = false;
+  chart: any;
+  @ViewChild('chartCanvas') chartCanvas!: ElementRef;
 
-  constructor(private apiService: ApiService) {}
+  registroData: { date: string, peso: number }[] = [];
+
+
+  constructor(private apiService: ApiService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.apiService.getEjericios().subscribe((response: any[]) => {
@@ -142,4 +149,84 @@ export class MisEjerciciosComponent implements OnInit {
       alert('Por favor, selecciona una rutina y un número válido de series.');
     }
   }
+  filtrarEjercicios(){
+    this.applyFilters(); // Aplica primero los filtros de tipo y categoría
+    this.data = this.data.filter(item =>
+    item.nombre.toLowerCase().includes(this.filtroBusqueda.toLowerCase())
+  );
+  }
+
+  openModalGrafica(item: any): void {
+  this.elementoSeleccionado = item;
+  this.modalVisibleGrafica = true;
+
+  // Esperamos un poco a que el canvas se renderice en el DOM
+  setTimeout(() => {
+    this.getRegistrosEjercicio(
+      Number(localStorage.getItem('usuario')),
+      this.elementoSeleccionado.id
+    );
+  }, 100); // No hace falta que sea 300ms
+}
+
+closeModalGrafica(): void {
+  this.modalVisibleGrafica = false;
+  if (this.chart) {
+    this.chart.destroy();
+  }
+}
+
+getRegistrosEjercicio(usuarioId: number, ejercicioId: number): void {
+  this.apiService.getRegistroEjercicio(usuarioId, ejercicioId).subscribe(
+    (response: any[]) => {
+      this.registroData = response.map(r => ({
+        date: new Date(r.fecha).toLocaleDateString(),
+        peso: r.valor
+      }));
+      // Esperamos a que Angular haya renderizado el canvas
+      setTimeout(() => {
+        this.cdr.detectChanges();
+        this.loadChart();
+      }, 0);
+    },
+    (error) => {
+      console.error('Error al obtener los registros del ejercicio:', error);
+      this.registroData = [];
+    }
+  );
+}
+
+loadChart(): void {
+  if (!this.chartCanvas) {
+    console.error('Canvas no disponible aún');
+    return;
+  }
+
+  if (this.chart) {
+    this.chart.destroy();
+  }
+
+  this.chart = new Chart(this.chartCanvas.nativeElement, {
+    type: 'line',
+    data: {
+      labels: this.registroData.map(entry => entry.date),
+      datasets: [
+        {
+          label: 'Mejor Serie (kg)',
+          data: this.registroData.map(entry => entry.peso),
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.2)',
+          tension: 0.3,
+          pointRadius: 5,
+          pointBackgroundColor: '#2563eb',
+        }
+      ]
+    },
+    options: {
+      responsive: true
+    }
+  });
+}
+
+
 }

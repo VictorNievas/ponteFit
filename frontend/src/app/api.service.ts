@@ -80,6 +80,10 @@ export class ApiService {
   anadirComentario(id_sesion: number, id_usuario: number, comentario: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/anadir_comentario`, {id_sesion, id_usuario, comentario});
   }
+
+  getRegistroEjercicio(id_usuario: number, id_ejercicio: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/get_registro_ejercicio?id_usuario=${id_usuario}&id_ejercicio=${id_ejercicio}`);
+  }
 }
 
 

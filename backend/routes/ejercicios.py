@@ -217,3 +217,64 @@ def anadir_comentario():
 
     # Respuesta de éxito
     return jsonify({"message": "Comentario añadido correctamente"}), 201
+
+@ejercicios.route('/get_registro_ejercicio', methods=['GET'])
+def get_registros_ejercicio():
+    usuario_id = request.args.get('id_usuario')
+    ejercicio_id = request.args.get('id_ejercicio')
+
+    if not usuario_id or not ejercicio_id:
+        return jsonify({'error': 'Faltan parámetros usuario_id o ejercicio_id'}), 400
+
+    try:
+        usuario_id = int(usuario_id)
+        ejercicio_id = int(ejercicio_id)
+    except ValueError:
+        return jsonify({'error': 'Parámetros deben ser enteros'}), 400
+
+    try:
+        sesiones = mongo.db.sesiones.find({
+            "id_usuario": usuario_id,
+            "ejercicios.id_ejercicio": ejercicio_id
+        })
+
+        mejores_series = []
+
+        for sesion in sesiones:
+            mejor_serie = None
+            max_peso_x_reps = 0
+            fecha = sesion.get("fecha")
+            sesion_id = sesion.get("id")
+
+            for ejercicio in sesion.get("ejercicios", []):
+                if ejercicio.get("id_ejercicio") == ejercicio_id:
+                    for serie in ejercicio.get("series", []):
+                        peso = serie.get("peso", 0)
+                        repeticiones = serie.get("repeticiones", 0)
+
+                        # Aseguramos que peso y repeticiones sean int o float
+                        if isinstance(peso, dict):
+                            # Por si acaso viene {'$numberInt': '96'} o similar
+                            peso = int(next(iter(peso.values())))
+                        if isinstance(repeticiones, dict):
+                            repeticiones = int(next(iter(repeticiones.values())))
+
+                        valor = peso * repeticiones
+
+                        if valor > max_peso_x_reps:
+                            max_peso_x_reps = valor
+                            mejor_serie = {
+                                "sesion_id": int(sesion_id),
+                                "fecha": fecha,
+                                "peso": peso,
+                                "repeticiones": repeticiones,
+                                "valor": valor
+                            }
+
+            if mejor_serie:
+                mejores_series.append(mejor_serie)
+
+        return jsonify(mejores_series), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
