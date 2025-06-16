@@ -24,7 +24,10 @@ ARCHIVO_CLIENT_SECRET = os.getenv("ARCHIVO_CLIENT_SECRET")  # Ruta al archivo cl
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")  # ID del cliente de Google
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")  # Secreto del cliente de Google
 GOOGLE_REDIRECT_URI = "http://localhost:5000/api/google/callback"
-SCOPES = os.getenv("SCOPES")  # Alcances de Google Fit
+SCOPES = os.getenv("SCOPES", "")
+SCOPES = SCOPES.split(",") if SCOPES else []
+
+
 
 
 # Ruta absoluta para el archivo client_secret.json
@@ -73,6 +76,32 @@ def google_fit_callback():
         </script>
     """
 
+def safe_get_int(data, keys, default=0):
+    try:
+        for key in keys[:-1]:
+            data = data[key]
+        # Último key puede ser índice o key
+        last = keys[-1]
+        if isinstance(last, int):
+            return int(data[last])
+        else:
+            return int(data[last])
+    except (IndexError, KeyError, TypeError):
+        return default
+
+def safe_get_float(data, keys, default=0.0):
+    try:
+        for key in keys[:-1]:
+            data = data[key]
+        last = keys[-1]
+        if isinstance(last, int):
+            return float(data[last])
+        else:
+            return float(data[last])
+    except (IndexError, KeyError, TypeError):
+        return default
+
+
 # Ruta para obtener los datos de Google Fit
 @google.route('/google_fit_data', methods=['GET'])
 @jwt_required()
@@ -118,11 +147,12 @@ def get_google_fit_data():
         profile_data = response_profile.json()
 
         # Obtener datos con manejo de errores y conversiones necesarias
-        steps = aggregate_data.get("bucket", [{}])[0].get("dataset", [{}])[0].get("point", [{}])[0].get("value", [{}])[0].get("intVal", 0)
-        calories = int(aggregate_data.get("bucket", [{}])[0].get("dataset", [{}])[1].get("point", [{}])[0].get("value", [{}])[0].get("fpVal", 0))  # Sin decimales
-        distance_m = aggregate_data.get("bucket", [{}])[0].get("dataset", [{}])[2].get("point", [{}])[0].get("value", [{}])[0].get("fpVal", 0)
-        distance_km = round(distance_m / 1000, 2)  # Convertir metros a km con 2 decimales
-        active_minutes = aggregate_data.get("bucket", [{}])[0].get("dataset", [{}])[3].get("point", [{}])[0].get("value", [{}])[0].get("intVal", 0)
+        steps = safe_get_int(aggregate_data, ["bucket", 0, "dataset", 0, "point", 0, "value", 0, "intVal"])
+        calories = int(safe_get_float(aggregate_data, ["bucket", 0, "dataset", 1, "point", 0, "value", 0, "fpVal"]))
+        distance_m = safe_get_float(aggregate_data, ["bucket", 0, "dataset", 2, "point", 0, "value", 0, "fpVal"])
+        distance_km = round(distance_m / 1000, 2)
+        active_minutes = safe_get_int(aggregate_data, ["bucket", 0, "dataset", 3, "point", 0, "value", 0, "intVal"])
+
 
         print(steps, calories, distance_km, active_minutes)  # Debug
 
