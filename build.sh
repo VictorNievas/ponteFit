@@ -1,15 +1,12 @@
 #!/bin/bash
-# build.sh
-
-# Salir si hay errores
 set -e
 
-# Construir el frontend Angular
+echo "📦 Instalando dependencias Angular..."
 cd frontend
 npm install
+npm install -g @angular/cli  # <- aquí se instala globalmente
 ng build --configuration=production --output-path=../backend/static
 cd ..
 
-# Instalar dependencias del backend
-cd backend
-pip install -r requirements.txt
+echo "🐍 Instalando dependencias de Flask..."
+pip install -r backend/requirements.txt
